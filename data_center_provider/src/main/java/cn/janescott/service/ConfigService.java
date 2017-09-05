@@ -14,7 +14,7 @@ public interface ConfigService {
     ConfigEntity getConfig(Long id);
     ConfigEntity getConfig(String category, String name);
 
-    DataBaseConfigDTO getDataBaseConfigDTO(List<ConfigEntity> configs);
+    DataBaseConfigDTO getDataBaseConfigDTO();
 
     void updateDataBaseConfigLocal(DataBaseConfigDTO configDTO);
     void updateDataBaseConfigCloud(DataBaseConfigDTO configDTO);

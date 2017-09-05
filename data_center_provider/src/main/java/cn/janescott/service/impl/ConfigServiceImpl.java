@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -44,15 +45,37 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public DataBaseConfigDTO getDataBaseConfigDTO(List<ConfigEntity> configs) {
-        DataBaseConfigDTO configDTO = new DataBaseConfigDTO();
-
+    public DataBaseConfigDTO getDataBaseConfigDTO() {
+        List<ConfigEntity> configs = getConfigs(Constants.DATABASE_CONFIG_CATEGORY);
+        if (!CollectionUtils.isEmpty(configs)) {
+            DataBaseConfigDTO configDTO = new DataBaseConfigDTO();
+            for (ConfigEntity entity : configs) {
+                if (entity != null && !StringUtils.isEmpty(entity.getName())) {
+                    try {
+                        Field field = configDTO.getClass().getDeclaredField(entity.getName());
+                        field.set(configDTO, entity.getKey());
+                    } catch (Exception e){
+                        //todo log配置
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return configDTO;
+        }
         return null;
     }
 
     @Override
     public void updateDataBaseConfigLocal(DataBaseConfigDTO configDTO) {
+        if (configDTO != null){
+            Field[] declaredFields = configDTO.getClass().getDeclaredFields();
+            for (Field field : declaredFields) {
+                String name = field.getName();
+//                String key = field.get(name);
+                ConfigEntity entity = new ConfigEntity();
 
+            }
+        }
     }
 
     @Override
@@ -67,22 +90,6 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public void init() {
-        List<String> categories = configRepository.getDistinctCategory();
-        if (!CollectionUtils.isEmpty(categories)) {
-            for (String category : categories) {
-                if (!StringUtils.isEmpty(category)) {
-                    try {
-                        List<ConfigEntity> configs = getConfigs(category);
-                        Class<?> aClass = Class.forName(category);
-                        Object instance = aClass.newInstance();
-                        if (instance instanceof DataBaseConfigDTO) {
-
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
+        updateDataBaseConfigCloud(getDataBaseConfigDTO());
     }
 }

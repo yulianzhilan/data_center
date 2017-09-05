@@ -10,4 +10,5 @@ public class Constants {
 
     public static final String DATABASE_CONFIG = "/database_config";
 
+    public static final String DATABASE_CONFIG_CATEGORY = "DATABASE";
 }
