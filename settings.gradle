@@ -1,0 +1,6 @@
+rootProject.name='data_center'
+include 'data_center_api'
+include 'data_center_provider'
+include 'data_center_portal'
+include 'data_center_api'
+

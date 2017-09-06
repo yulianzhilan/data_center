@@ -1,6 +1,6 @@
 package cn.janescott.facade.impl;
 
-import cn.janescott.domain.dto.DataBaseConfigDTO;
+import cn.janescott.dto.DataBaseConfigDTO;
 import cn.janescott.facade.DataCenterFacade;
 import cn.janescott.service.ConfigService;
 import com.alibaba.dubbo.config.annotation.Service;
@@ -17,11 +17,17 @@ public class DataCenterFacadeImpl implements DataCenterFacade {
 
     @Override
     public void init() {
-
+        configService.init();
     }
 
     @Override
     public void updateDataBaseConfig(DataBaseConfigDTO configDTO) {
+        configService.updateDataBaseConfigLocal(configDTO);
+        configService.updateDataBaseConfigCloud();
+    }
 
+    @Override
+    public DataBaseConfigDTO getDataBaseConfig() {
+        return configService.getDataBaseConfigDTO();
     }
 }

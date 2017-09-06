@@ -2,8 +2,8 @@ package cn.janescott.service.impl;
 
 import cn.janescott.common.Constants;
 import cn.janescott.common.ZKUtil;
-import cn.janescott.domain.dto.DataBaseConfigDTO;
-import cn.janescott.domain.entity.ConfigEntity;
+import cn.janescott.domain.ConfigEntity;
+import cn.janescott.dto.DataBaseConfigDTO;
 import cn.janescott.repository.ConfigRepository;
 import cn.janescott.service.ConfigService;
 import org.I0Itec.zkclient.ZkClient;
@@ -53,8 +53,9 @@ public class ConfigServiceImpl implements ConfigService {
                 if (entity != null && !StringUtils.isEmpty(entity.getName())) {
                     try {
                         Field field = configDTO.getClass().getDeclaredField(entity.getName());
+                        field.setAccessible(true);
                         field.set(configDTO, entity.getKey());
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         //todo log配置
                         e.printStackTrace();
                     }
@@ -67,21 +68,36 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public void updateDataBaseConfigLocal(DataBaseConfigDTO configDTO) {
-        if (configDTO != null){
+        if (configDTO == null) {
+            // todo exception
+        } else {
             Field[] declaredFields = configDTO.getClass().getDeclaredFields();
             for (Field field : declaredFields) {
-                String name = field.getName();
-//                String key = field.get(name);
-                ConfigEntity entity = new ConfigEntity();
-
+                try {
+                    String name = field.getName();
+                    field.setAccessible(true);
+                    String key = (String)field.get(configDTO);
+                    ConfigEntity entity = configRepository.getOneByCategoryAndName(Constants.DATABASE_CONFIG_CATEGORY, name);
+                    if (entity == null) {
+                        entity = new ConfigEntity();
+                        entity.setCategory(Constants.DATABASE_CONFIG_CATEGORY);
+                        entity.setName(name);
+                    }
+                    entity.setKey(key);
+                    configRepository.save(entity);
+                } catch (Exception e) {
+                    // todo log
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     @Override
-    public void updateDataBaseConfigCloud(DataBaseConfigDTO configDTO) {
+    public void updateDataBaseConfigCloud() {
+        DataBaseConfigDTO configDTO = getDataBaseConfigDTO();
         ZkClient zkClient = ZKUtil.getZKClient();
-        if (!zkClient.exists(Constants.DATABASE_CONFIG)){
+        if (!zkClient.exists(Constants.DATABASE_CONFIG)) {
             zkClient.createPersistent(Constants.DATABASE_CONFIG, true);
         }
         zkClient.writeData(Constants.DATABASE_CONFIG, configDTO);
@@ -90,6 +106,6 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public void init() {
-        updateDataBaseConfigCloud(getDataBaseConfigDTO());
+        updateDataBaseConfigCloud();
     }
 }

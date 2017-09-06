@@ -1,9 +1,4 @@
-package cn.janescott.domain.dto;
-
-import cn.janescott.domain.entity.ConfigEntity;
-import org.springframework.util.CollectionUtils;
-
-import java.util.List;
+package cn.janescott.dto;
 
 /**
  * Created by scott on 2017/9/5.
@@ -25,6 +20,8 @@ public class DataBaseConfigDTO implements java.io.Serializable{
     private String initialPoolSize;
 
     private String maxIdleTime;
+
+    private String maxStatements;
 
     private String acquireIncrement;
 
@@ -92,6 +89,14 @@ public class DataBaseConfigDTO implements java.io.Serializable{
 
     public void setMaxIdleTime(String maxIdleTime) {
         this.maxIdleTime = maxIdleTime;
+    }
+
+    public String getMaxStatements() {
+        return maxStatements;
+    }
+
+    public void setMaxStatements(String maxStatements) {
+        this.maxStatements = maxStatements;
     }
 
     public String getAcquireIncrement() {

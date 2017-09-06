@@ -1,7 +1,7 @@
 package cn.janescott.service;
 
-import cn.janescott.domain.dto.DataBaseConfigDTO;
-import cn.janescott.domain.entity.ConfigEntity;
+import cn.janescott.dto.DataBaseConfigDTO;
+import cn.janescott.domain.ConfigEntity;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface ConfigService {
     DataBaseConfigDTO getDataBaseConfigDTO();
 
     void updateDataBaseConfigLocal(DataBaseConfigDTO configDTO);
-    void updateDataBaseConfigCloud(DataBaseConfigDTO configDTO);
+    void updateDataBaseConfigCloud();
 
     void init();
 }

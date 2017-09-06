@@ -6,7 +6,9 @@ package cn.janescott.common;
 public class Constants {
     public static final String DATA_CENTER_SCHEMA = "DATA_CENTER";
 
-    public static final String ZOOKEEPER_CONNECTIONS = "119.23.207.124:2887,119.23.207.124:2888,119.23.207.124:2889";
+//    public static final String ZOOKEEPER_CONNECTIONS = "119.23.207.124:20880";
+//    public static final String ZOOKEEPER_CONNECTIONS = "119.23.207.124:2181";
+    public static final String ZOOKEEPER_CONNECTIONS = "119.23.207.124:2181,119.23.207.124:2182,119.23.207.124:2183";
 
     public static final String DATABASE_CONFIG = "/database_config";
 

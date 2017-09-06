@@ -1,0 +1,24 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+//所有项目通用的设置
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    ext {
+        //统一编码为utf-8
+        [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+}

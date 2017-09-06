@@ -1,4 +1,4 @@
-package cn.janescott.domain.entity;
+package cn.janescott.domain;
 
 import cn.janescott.common.Constants;
 
